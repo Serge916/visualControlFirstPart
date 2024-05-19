@@ -56,13 +56,14 @@ RUN dt-apt-install ${REPO_PATH}/dependencies-apt.txt
 ARG PIP_INDEX_URL="https://pypi.org/simple/"
 ENV PIP_INDEX_URL=${PIP_INDEX_URL}
 COPY ./dependencies-py3.* "${REPO_PATH}/"
-RUN python3 -m pip install -r ${REPO_PATH}/dependencies-py3.txt
+RUN dt-pip3-install "${REPO_PATH}/dependencies-py3.*"
+# RUN python3 -m pip install -r ${REPO_PATH}/dependencies-py3.txt
 
 # download YOLOv5 model (weights will be downloaded from DCSS)
 RUN git clone -b v7.0 https://github.com/ultralytics/yolov5 "/yolov5"
 
 # copy the assets (recipe)
-COPY  ./assets "${REPO_PATH}/assets"
+# COPY  ./assets "${REPO_PATH}/assets"
 
 # copy the source code (recipe)
 COPY  ./packages "${REPO_PATH}/packages"
