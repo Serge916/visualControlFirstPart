@@ -9,7 +9,7 @@ import yaml
 from duckietown.dtros import DTROS, NodeType, TopicType
 from duckietown_msgs.msg import Twist2DStamped, WheelEncoderStamped, EpisodeStart
 from nav_msgs.msg import Odometry
-from std_msgs.msg import String
+from std_msgs.msg import String, Bool
 
 from solution import odometry_activity
 from solution import pid_controller
@@ -126,6 +126,14 @@ class EncoderPoseNode(DTROS):
             episode_start_topic, EpisodeStart, self.cbEpisodeStart, queue_size=1
         )
 
+        # CUSTOM
+        rospy.Subscriber(
+            f"/custom_stop_node/command_stop",
+            Bool,
+            self.cbCustom,
+            queue_size=1,
+        )
+
         # Odometry publisher
         self.db_estimated_pose = rospy.Publisher(
             f"/{self.veh}/encoder_localization",
@@ -197,6 +205,9 @@ class EncoderPoseNode(DTROS):
             )
             self.y_prev = 0.0
             self.theta_prev = 0.0
+
+    def cbCustom(self, stop):
+        self.publishCmd(0, 0)
 
     # Emergency stop / interactive pane for PID activity and exercise
     def cbPIDparam(self, msg):

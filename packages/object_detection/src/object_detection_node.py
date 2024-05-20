@@ -8,6 +8,7 @@ from duckietown.dtros import DTROS, NodeType, TopicType
 from duckietown_msgs.msg import Twist2DStamped, EpisodeStart
 from cv_bridge import CvBridge
 from sensor_msgs.msg import CompressedImage
+from std_msgs.msg import Bool
 
 
 from nn_model.constants import IMAGE_SIZE
@@ -41,6 +42,8 @@ class ObjectDetectionNode(DTROS):
         self.pub_car_cmd = rospy.Publisher(
             car_cmd_topic, Twist2DStamped, queue_size=1, dt_topic_type=TopicType.CONTROL
         )
+
+        self.customMessage = rospy.Publisher("~detected_duckie", Bool, queue_size=1)
 
         episode_start_topic = f"/{self.veh}/episode_start"
         rospy.Subscriber(
@@ -156,17 +159,20 @@ class ObjectDetectionNode(DTROS):
             return False
 
     def pub_car_commands(self, stop, header):
-        car_control_msg = Twist2DStamped()
-        car_control_msg.header = header
+        # car_control_msg = Twist2DStamped()
+        # car_control_msg.header = header
+        # if stop:
+        #     car_control_msg.v = 0.0
+        # else:
+        #     car_control_msg.v = self.v
+
+        # # always drive straight
+        # car_control_msg.omega = 0.0
+
+        # self.pub_car_cmd.publish(car_control_msg)
+
         if stop:
-            car_control_msg.v = 0.0
-        else:
-            car_control_msg.v = self.v
-
-        # always drive straight
-        car_control_msg.omega = 0.0
-
-        self.pub_car_cmd.publish(car_control_msg)
+            self.customMessage.publish(True)
 
 
 if __name__ == "__main__":

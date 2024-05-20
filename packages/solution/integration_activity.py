@@ -16,7 +16,7 @@ def MODEL_NAME() -> str:
 def NUMBER_FRAMES_SKIPPED() -> int:
     # TODO: change this number to drop more frames
     # (must be a positive integer)
-    return 0
+    return 5
 
 
 def filter_by_classes(pred_class: int) -> bool:
@@ -48,7 +48,7 @@ def filter_by_scores(score: float) -> bool:
     # Right now, this returns True for every object's confidence
     # TODO: Change this to filter the scores, or not at all
     # (returning True for all of them might be the right thing to do!)
-    return True
+    return True if score > 0.5 else False
 
 
 def filter_by_bboxes(bbox: Tuple[int, int, int, int]) -> bool:
