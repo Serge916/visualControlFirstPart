@@ -20,6 +20,8 @@ from solution.integration_activity import (
     filter_by_scores,
 )
 
+NUM_OF_CLASSES = 4
+
 
 class ObjectDetectionNode(DTROS):
     def __init__(self, node_name):
@@ -101,6 +103,8 @@ class ObjectDetectionNode(DTROS):
 
         rgb = cv2.resize(rgb, (IMAGE_SIZE, IMAGE_SIZE))
         bboxes, classes, scores = self.model_wrapper.predict(rgb)
+
+        classes = [int(classes[x]) % NUM_OF_CLASSES for x in range(len(classes))]
 
         detection = self.det2bool(bboxes, classes, scores)
 

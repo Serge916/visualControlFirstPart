@@ -58,7 +58,7 @@ ENV PIP_INDEX_URL=${PIP_INDEX_URL}
 COPY ./dependencies-py3.* "${REPO_PATH}/"
 RUN dt-pip3-install "${REPO_PATH}/dependencies-py3.*"
 # RUN python3 -m pip install -r ${REPO_PATH}/dependencies-py3.txt
-
+RUN pip install numpy --upgrade
 # download YOLOv5 model (weights will be downloaded from DCSS)
 RUN git clone -b v7.0 https://github.com/ultralytics/yolov5 "/yolov5"
 
@@ -67,6 +67,7 @@ RUN git clone -b v7.0 https://github.com/ultralytics/yolov5 "/yolov5"
 
 # copy the source code (recipe)
 COPY  ./packages "${REPO_PATH}/packages"
+COPY ./assets/agent "${REPO_PATH}/assets/agent"
 
 # copy the assets (meat)
 # COPY  ./assets/. "${REPO_PATH}/assets/"
